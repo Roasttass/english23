@@ -1,0 +1,26 @@
+{
+  "name": "club-member-identification-system",
+  "version": "1.0.0",
+  "description": "A web application for managing club member identification, including authentication, profile management, chat functionalities, and admin question handling.",
+  "main": "public/index.html",
+  "scripts": {
+    "start": "live-server public",
+    "build": "echo 'Build step not defined'",
+    "test": "echo 'Test step not defined'"
+  },
+  "keywords": [
+    "club",
+    "membership",
+    "identification",
+    "web",
+    "application"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "live-server": "^1.2.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.4"
+  }
+}

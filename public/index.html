@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Club Member Identification System</title>
+    <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+    <header>
+        <h1>Club Member Identification System</h1>
+    </header>
+    <main>
+        <!-- Login form -->
+        <div id="login-form">
+            <h2>Login</h2>
+            <div id="login-error" role="alert" aria-live="assertive"></div>
+            <label for="username-input">Username</label>
+            <input type="text" id="username-input" autocomplete="username" placeholder="Enter username" />
+            <label for="password-input">Password</label>
+            <input type="password" id="password-input" autocomplete="current-password" placeholder="Enter password" />
+            <button id="login-btn" type="button">Login</button>
+            <p>
+                Don't have an account? <a href="#" id="show-register-link">Register here</a>
+            </p>
+        </div>
+
+        <!-- Registration form -->
+        <div id="register-form" style="display: none;">
+            <h2>Register</h2>
+            <div id="register-error" role="alert" aria-live="assertive"></div>
+            <label for="register-name-input">Full Name</label>
+            <input type="text" id="register-name-input" placeholder="Enter full name" />
+            <label for="register-username-input">Username</label>
+            <input type="text" id="register-username-input" placeholder="Enter username" />
+            <label for="register-password-input">Password</label>
+            <input type="password" id="register-password-input" placeholder="Enter password" />
+            <button id="register-btn" type="button">Register</button>
+            <p>
+                Already have an account? <a href="#" id="show-login-link">Login here</a>
+            </p>
+        </div>
+
+        <!-- Dashboard -->
+        <section id="dashboard" aria-live="polite" aria-atomic="true">
+            <button id="logout-btn" aria-label="Logout">Logout</button>
+            <h2>Members</h2>
+            <p id="welcome-msg"></p>
+            <div id="show-password-option" style="display:none; margin-bottom:1rem;">
+                <label>
+                    <input type="checkbox" id="toggle-password-checkbox" />
+                    Show Passwords
+                </label>
+            </div>
+            <table role="table" aria-describedby="members-desc">
+                <caption id="members-desc">List of club members with their points and rankings</caption>
+                <thead>
+                    <tr>
+                        <th>Profile Picture</th>
+                        <th>Member Name</th>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Ranking</th>
+                        <th>Points</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="members-table-body">
+                    <!-- Members rows generated dynamically -->
+                </tbody>
+            </table>
+            <p><em>Admin can click ranking and points cells to edit them.</em></p>
+        </section>
+
+        <!-- Top 10 Members Section -->
+        <section id="top-members-section" style="display: none;">
+            <h3>Top 10 Members</h3>
+            <table role="table" aria-describedby="top-members-desc">
+                <caption id="top-members-desc">Top 10 members by points</caption>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Name</th>
+                        <th>Points</th>
+                        <th>Ranking</th>
+                    </tr>
+                </thead>
+                <tbody id="top-members-table-body">
+                    <!-- Top 10 members rows generated dynamically -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Profile Section -->
+        <section id="profile-section" style="display: none;">
+            <h3>My Profile</h3>
+            <div>
+                <img id="profile-picture" src="default-profile.png" alt="Profile Picture" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;" />
+                <input type="file" id="profile-picture-input" accept="image/*" />
+            </div>
+            <div>
+                <label for="bio-input">Bio:</label>
+                <textarea id="bio-input" rows="4" placeholder="Write something about yourself..."></textarea>
+            </div>
+            <button id="save-profile-btn">Save Profile</button>
+        </section>
+
+        <!-- Chat Section -->
+        <section id="chat-section" style="display: none;">
+            <h3>Chat</h3>
+            <div id="chat-messages" style="height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 1rem; background: #f9f9f9; border-radius: 8px; margin-bottom: 1rem;">
+                <!-- Chat messages will be displayed here -->
+            </div>
+            <div>
+                <input type="text" id="chat-input" placeholder="Type your message..." style="width: 80%; padding: 0.5rem; border: 1px solid #bbb; border-radius: 6px;" />
+                <button id="send-chat-btn" style="padding: 0.5rem 1rem; background: #4a90e2; color: white; border: none; border-radius: 6px; cursor: pointer;">Send</button>
+            </div>
+        </section>
+
+        <!-- Admin Question Submission -->
+        <section id="admin-question-section" style="display: none; margin-top: 2rem;">
+            <h3>Submit a Question</h3>
+            <textarea id="admin-question-input" rows="3" placeholder="Enter your question here..." style="width: 100%; padding: 0.5rem; margin-bottom: 1rem; border: 1px solid #bbb; border-radius: 6px;"></textarea>
+            <button id="submit-question-btn" style="padding: 0.5rem 1rem; background: #4a90e2; color: white; border: none; border-radius: 6px; cursor: pointer;">Submit Question</button>
+        </section>
+
+        <!-- Admin Results Section -->
+        <section id="admin-results-section" style="display: none; margin-top: 2rem;">
+            <h3>Question Results</h3>
+            <p id="results-question-text">No question submitted yet.</p>
+            <p><strong>Yes:</strong> <span id="results-yes-count">0</span></p>
+            <ul id="results-yes-list"></ul>
+            <p><strong>No:</strong> <span id="results-no-count">0</span></p>
+            <ul id="results-no-list"></ul>
+        </section>
+
+        <!-- Bio Modal -->
+        <div id="bio-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); z-index: 1000; width: 300px;">
+            <h3 id="bio-modal-name"></h3>
+            <p id="bio-modal-bio"></p>
+            <button id="close-bio-modal" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #4a90e2; color: white; border: none; border-radius: 6px; cursor: pointer;">Close</button>
+        </div>
+        <div id="bio-modal-overlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999;"></div>
+
+        <!-- Member Question Popup -->
+        <div id="member-question-popup" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.3); z-index: 1000; width: 300px;">
+            <h3 id="popup-question-text"></h3>
+            <div style="margin-top: 1rem; text-align: center;">
+                <button id="answer-yes-btn" style="padding: 0.5rem 1rem; background: #4caf50; color: white; border: none; border-radius: 6px; cursor: pointer; margin-right: 1rem;">Yes</button>
+                <button id="answer-no-btn" style="padding: 0.5rem 1rem; background: #f44336; color: white; border: none; border-radius: 6px; cursor: pointer;">No</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="../src/js/auth.js"></script>
+    <script src="../src/js/members.js"></script>
+    <script src="../src/js/profile.js"></script>
+    <script src="../src/js/chat.js"></script>
+    <script src="../src/js/questions.js"></script>
+    <script src="../src/js/utils.js"></script>
+</body>
+</html>
