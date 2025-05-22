@@ -501,6 +501,13 @@
     <button id="logout-btn" aria-label="Logout">Logout</button>
     <h2>Members</h2>
     <p id="welcome-msg"></p>
+    <!-- Opsi tampilkan password untuk admin -->
+    <div id="show-password-option" style="display:none; margin-bottom:1rem;">
+      <label>
+        <input type="checkbox" id="toggle-password-checkbox" />
+        Show Passwords
+      </label>
+    </div>
     <table role="table" aria-describedby="members-desc">
       <caption id="members-desc">List of club members with their points and rankings</caption>
       <thead>
@@ -843,9 +850,13 @@
       usernameTd.setAttribute('data-label', 'Username');
       tr.appendChild(usernameTd);
 
-      // Password cell (only visible to admin)
+      // Password cell (hanya admin, bisa toggle tampil/sembunyi)
       const passwordTd = document.createElement('td');
-      passwordTd.textContent = currentUser.role === 'admin' ? user.password : '******';
+      if (currentUser.role === 'admin') {
+        passwordTd.textContent = showPasswords ? user.password : '******';
+      } else {
+        passwordTd.textContent = '******';
+      }
       passwordTd.setAttribute('data-label', 'Password');
       tr.appendChild(passwordTd);
 
@@ -1144,8 +1155,8 @@
       document.getElementById('top-members-section').style.display = 'none';
       profileSection.style.display = 'none';
       chatSection.style.display = 'block';
-      renderMembersTable(user);
-      updateAdminResults(); // Update results for admin
+      showPasswordOption.style.display = 'block';
+      togglePasswordCheckbox.checked = showPasswords;
     } else {
       // Member view
       adminQuestionSection.style.display = 'none';
@@ -1157,10 +1168,16 @@
       showProfile(user);
       renderTop10Members();
 
+      // Sembunyikan opsi show password untuk member
+      showPasswordOption.style.display = 'none';
+      togglePasswordCheckbox.checked = false;
+      showPasswords = false;
+
       // Check for a question
       checkForQuestion();
     }
 
+    renderMembersTable(user);
     renderChatMessages();
   }
 
@@ -1329,7 +1346,59 @@
   // Initialize app
   init();
 
+  let showPasswords = false; // Status tampil/sembunyi password
+
+  const showPasswordOption = document.getElementById('show-password-option');
+  const togglePasswordCheckbox = document.getElementById('toggle-password-checkbox');
+
+  // Show dashboard and hide login
+  function showDashboard(user) {
+    loginFormEl.style.display = 'none';
+    registerFormEl.style.display = 'none';
+    dashboardEl.style.display = 'block';
+    welcomeMsg.textContent = `Welcome, ${user.name} (${user.role})`;
+
+    if (user.role === 'admin') {
+      // Admin view
+      adminQuestionSection.style.display = 'block';
+      adminResultsSection.style.display = 'block';
+      document.querySelector('table[aria-describedby="members-desc"]').style.display = 'table';
+      document.getElementById('top-members-section').style.display = 'none';
+      profileSection.style.display = 'none';
+      chatSection.style.display = 'block';
+      showPasswordOption.style.display = 'block';
+      togglePasswordCheckbox.checked = showPasswords;
+    } else {
+      // Member view
+      adminQuestionSection.style.display = 'none';
+      adminResultsSection.style.display = 'none';
+      document.querySelector('table[aria-describedby="members-desc"]').style.display = 'none';
+      document.getElementById('top-members-section').style.display = 'block';
+      profileSection.style.display = 'block';
+      chatSection.style.display = 'block';
+      showProfile(user);
+      renderTop10Members();
+
+      // Sembunyikan opsi show password untuk member
+      showPasswordOption.style.display = 'none';
+      togglePasswordCheckbox.checked = false;
+      showPasswords = false;
+
+      // Check for a question
+      checkForQuestion();
+    }
+
+    renderMembersTable(user);
+    renderChatMessages();
+  }
+
+  // Event listener untuk toggle tampil/sembunyi password
+  togglePasswordCheckbox.addEventListener('change', () => {
+    showPasswords = togglePasswordCheckbox.checked;
+    const currentUser = findUser(getSession());
+    if (currentUser) {
+      renderMembersTable(currentUser);
+    }
+  });
+
 })();
-</script>
-</body>
-</html>
